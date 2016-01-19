@@ -1,0 +1,23 @@
+type project
+owners
+    DamReev, nvivo
+authors 
+    DamReev
+projectUrl
+    http://github.com/evendotnet/Even.Persistence.Oracle
+iconUrl
+    https://raw.githubusercontent.com/evendotnet/Even.Persistence.Oracle/master/docs/files/img/logo.png
+licenseUrl
+    http://github.com/evendotnet/Even.Persistence.Oracle/blob/master/LICENSE.txt
+requireLicenseAcceptance
+    false
+copyright
+    Copyright 2015
+tags
+    even event sourcing akka.net oracle
+summary
+    Oracle based persistent extensions for Even.
+description
+    Even is experimental event sourcing framework built on top of Akka.NET. This package provides Oracle based EventStores.
+
+

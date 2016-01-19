@@ -1,0 +1,18 @@
+source https://nuget.org/api/v2
+nuget Even
+
+group Build
+  source https://nuget.org/api/v2
+  
+  nuget SourceLink.Fake
+  nuget FAKE
+  nuget FSharp.Formatting
+
+  github fsharp/FAKE modules/Octokit/Octokit.fsx
+
+group Test
+  source https://nuget.org/api/v2
+
+  nuget xunit ~> 2
+  nuget xunit.runner.console ~> 2
+  nuget xunit.runner.visualstudio ~> 2
