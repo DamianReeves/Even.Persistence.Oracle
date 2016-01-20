@@ -24,7 +24,7 @@ namespace Even.Persistence.OracleManaged.Sql
             get { return _templateEngine; }
         }
 
-        public async Task<string> GetInitializationScriptAsync(string eventsTableName, string projectionIndexTableName, string projectionCheckpointTableName, string schemaName)
+        public async Task<string> GetInitializationScriptAsync(string eventsTableName, string projectionIndexTableName, string projectionCheckpointTableName, string schema)
         {
 
             using (var stream = MyType.Assembly.GetManifestResourceStream(MyType, "InitializeDatabase.template.sql"))
@@ -34,10 +34,10 @@ namespace Even.Persistence.OracleManaged.Sql
                     var text = await reader.ReadToEndAsync();
                     var templateData = new
                     {
-                        Events = eventsTableName,
-                        ProjectionIndex = projectionIndexTableName,
-                        ProjectionCheckpoint = projectionCheckpointTableName,
-                        Schema = schemaName
+                        EventsTableName = eventsTableName,
+                        ProjectionIndexTableName = projectionIndexTableName,
+                        ProjectionCheckpointTableName = projectionCheckpointTableName,
+                        Schema = schema
                     };
                     return TemplateEngine.Generate(text, templateData);
                 }

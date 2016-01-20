@@ -44,6 +44,7 @@
     <Content Include="net40\Web.config.uninstall.xdt">
       <Paket>True</Paket>
     </Content>
+    <EmbeddedResource Include="Sql\WriteEvents.template.sql" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -54,8 +55,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Configuration\TableSettings.cs" />
     <Compile Include="Internals\Templating\ITemplateEngine.cs" />
     <Compile Include="Internals\Templating\TemplateEngine.cs" />
+    <Compile Include="Operations\DataAccessOperationBase.cs" />
     <Compile Include="Operations\WriteEventsCommand.cs" />
     <Compile Include="OracleEventStore.cs" />
     <Compile Include="Properties\AssemblyInfo.custom.cs" />
