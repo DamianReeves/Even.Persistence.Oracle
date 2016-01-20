@@ -102,6 +102,20 @@ namespace Even.Persistence.OracleManaged
             CancellationToken ct)
         {
             throw new NotImplementedException();
-        }       
+        }
+
+        protected virtual OracleCommand CreateWriteCommand(Stream stream, IUnpersistedRawEvent e)
+        {
+            //// order: EventID, StreamHash, StreamName, EventType, UtcTimestamp, Metadata, Payload, PayloadFormat
+            //// index: 0        1           2           3          4             5         6        7
+            //var command = DB.CreateCommand(CommandText_Write, e.EventID, stream.Hash, stream.Name, e.EventType, e.UtcTimestamp, e.Metadata, e.Payload, e.PayloadFormat);
+
+            //// dbtype may not be inferred because payload may be null - all other fields are "not null"
+            //// this avoids issues when the provider generates or converts parameters
+            //command.Parameters[5].DbType = DbType.Binary;
+
+            //return command;
+            throw new NotImplementedException();
+        }
     }
 }

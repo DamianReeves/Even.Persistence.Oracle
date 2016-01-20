@@ -1,5 +1,6 @@
 source https://nuget.org/api/v2
 nuget Even
+nuget Oracle.ManagedDataAccess
 
 group Build
   source https://nuget.org/api/v2
@@ -13,6 +14,7 @@ group Build
 group Test
   source https://nuget.org/api/v2
 
+  nuget TestStack.Bddfy
   nuget xunit ~> 2
   nuget xunit.runner.console ~> 2
   nuget xunit.runner.visualstudio ~> 2
