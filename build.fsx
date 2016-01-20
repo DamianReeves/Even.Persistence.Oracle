@@ -10,6 +10,8 @@ open Fake.ReleaseNotesHelper
 open Fake.UserInputHelper
 open System
 open System.IO
+open Fake.Testing
+
 #if MONO
 #else
 #load "packages/build/SourceLink.Fake/tools/Fake.fsx"
@@ -66,7 +68,16 @@ let gitRaw = environVarOrDefault "gitRaw" "https://raw.github.com/evendotnet"
 // --------------------------------------------------------------------------------------
 
 // Read additional information from the release notes document
-let release = LoadReleaseNotes "RELEASE_NOTES.md"
+let release = 
+  let rel = LoadReleaseNotes "RELEASE_NOTES.md"
+  
+  match buildServer with
+  | AppVeyor -> 
+    let nugetVersion = rel.NugetVersion + "-build-ci-"+AppVeyor.AppVeyorEnvironment.BuildNumber        
+    {rel with NugetVersion = nugetVersion}
+  | _ -> rel
+
+let rootDir = __SOURCE_DIRECTORY__
 
 // Helper active pattern for project types
 let (|Fsproj|Csproj|Vbproj|Shproj|) (projFileName:string) =
@@ -143,12 +154,17 @@ Target "Build" (fun _ ->
 // Run the unit tests using test runner
 
 Target "RunTests" (fun _ ->
+    CreateDir (rootDir @@ "temp" @@ "TestResults")
+
     !! testAssemblies
-    |> NUnit (fun p ->
+    |> xUnit2 (fun p ->
         { p with
-            DisableShadowCopy = true
+            ShadowCopy = false
             TimeOut = TimeSpan.FromMinutes 20.
-            OutputFile = "TestResults.xml" })
+            ExcludeTraits = [("Category","Timeout"); ("Investigate","True")]
+            HtmlOutputPath = Some(rootDir @@ "temp" @@ "TestResults" @@ "TestResults.html")
+            XmlOutputPath = Some( rootDir @@ "temp" @@ "TestResults" @@ "TestResults.xml")            
+            NUnitXmlOutputPath = Some(rootDir @@ "temp" @@ "TestResults" @@"TestResults.nunit.xml") })
 )
 
 #if MONO

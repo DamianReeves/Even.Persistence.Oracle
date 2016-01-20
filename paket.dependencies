@@ -16,5 +16,4 @@ group Test
 
   nuget TestStack.Bddfy
   nuget xunit ~> 2
-  nuget xunit.runner.console ~> 2
-  nuget xunit.runner.visualstudio ~> 2
+  nuget xunit.runner.console ~> 2.1
