@@ -55,14 +55,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Configuration\TableSettings.cs" />
+    <Compile Include="Configuration\EventStoreDatabaseSchemaSettings.cs" />
     <Compile Include="Internals\Templating\ITemplateEngine.cs" />
     <Compile Include="Internals\Templating\TemplateEngine.cs" />
-    <Compile Include="Operations\DataAccessOperationBase.cs" />
-    <Compile Include="Operations\WriteEventsCommand.cs" />
     <Compile Include="OracleEventStore.cs" />
     <Compile Include="Properties\AssemblyInfo.custom.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Sql\ISqlScriptProvider.cs" />
     <Compile Include="Sql\SqlScriptProvider.cs" />
   </ItemGroup>
   <ItemGroup>

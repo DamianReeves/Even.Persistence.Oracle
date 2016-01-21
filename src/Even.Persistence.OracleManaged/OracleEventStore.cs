@@ -4,6 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Even.Persistence.OracleManaged.Configuration;
+using Even.Persistence.OracleManaged.Internals.Templating;
+using Even.Persistence.OracleManaged.Sql;
 using Oracle.ManagedDataAccess.Client;
 
 namespace Even.Persistence.OracleManaged
@@ -11,11 +14,17 @@ namespace Even.Persistence.OracleManaged
     public class OracleEventStore: IEventStore
     {
         private readonly Func<OracleConnection> _connectionFactory;
+        private readonly EventStoreDatabaseSchemaSettings _schemaSettings;
+        private readonly ISqlScriptProvider _scriptProvider;
 
-        public OracleEventStore(Func<OracleConnection>  connectionFactory)
+        public OracleEventStore(Func<OracleConnection>  connectionFactory, EventStoreDatabaseSchemaSettings schemaSettings, ISqlScriptProvider scriptProvider)
         {
             if (connectionFactory == null) throw new ArgumentNullException(nameof(connectionFactory));
+            if (schemaSettings == null) throw new ArgumentNullException(nameof(schemaSettings));
+            if (scriptProvider == null) throw new ArgumentNullException(nameof(scriptProvider));
             _connectionFactory = connectionFactory;
+            _schemaSettings = schemaSettings;
+            _scriptProvider = scriptProvider;
         }
 
         internal Func<OracleConnection> ConnectionFactory
@@ -23,20 +32,15 @@ namespace Even.Persistence.OracleManaged
             get { return _connectionFactory; }
         }
 
-        /// <summary>
-        /// Name of the 'Events' table.
-        /// </summary>
-        public virtual string EventsTable => "Event";
+        public ISqlScriptProvider ScriptProvider
+        {
+            get { return _scriptProvider; }
+        }
 
-        /// <summary>
-        /// Name of the 'ProjectionIndex' table.
-        /// </summary>
-        public virtual string ProjectionIndexTable => "ProjectionIndex";
-
-        /// <summary>
-        /// Name of the 'ProjectionCheckpoint' table.
-        /// </summary>
-        public virtual string ProjectionCheckpointTable => "ProjectionCheckpoint";
+        public EventStoreDatabaseSchemaSettings SchemaSettings
+        {
+            get { return _schemaSettings; }
+        }
 
         public Task InitializeAsync()
         {
@@ -104,6 +108,21 @@ namespace Even.Persistence.OracleManaged
             throw new NotImplementedException();
         }
 
+        protected virtual async Task BuildCommandsAsync()
+        {
+            await BuildCommandsAsync();
+
+            if (SchemaSettings.CreateTables)
+            {
+                
+            }
+        }
+
+        protected virtual OracleConnection CreateConnection()
+        {
+            return ConnectionFactory.Invoke();
+        }
+
         protected virtual OracleCommand CreateWriteCommand(Stream stream, IUnpersistedRawEvent e)
         {
             //// order: EventID, StreamHash, StreamName, EventType, UtcTimestamp, Metadata, Payload, PayloadFormat
@@ -117,5 +136,13 @@ namespace Even.Persistence.OracleManaged
             //return command;
             throw new NotImplementedException();
         }
+
+        protected virtual async Task<OracleCommand> CreateWriteEventsCommand(IReadOnlyCollection<IUnpersistedRawStreamEvent> events)
+        {
+            var commandText = await ScriptProvider.GetInitializationScriptAsync(SchemaSettings);
+            var command = new OracleCommand(commandText, CreateConnection());
+            // TODO: Add parameters
+            return command;
+        } 
     }
 }

@@ -13,7 +13,8 @@ group Build
 
 group Test
   source https://nuget.org/api/v2
-
+  nuget NSubstitute
+  nuget FluentAssertions
   nuget TestStack.Bddfy
   nuget xunit ~> 2
   nuget xunit.runner.console ~> 2.1

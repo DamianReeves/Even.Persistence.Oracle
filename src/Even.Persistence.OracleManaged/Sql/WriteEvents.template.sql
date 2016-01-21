@@ -1,4 +1,7 @@
-﻿declare
+﻿--------------------------------------------------------------------------------
+-- TemplateName: WriteEvents.template.sql
+--------------------------------------------------------------------------------
+declare
     -- declare types to store event fields
     type eventId_t          is table of number index by binary_integer;
     type streamHash_t       is table of raw(20) index by binary_integer;

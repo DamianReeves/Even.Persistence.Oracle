@@ -3,3 +3,5 @@ Oracle.ManagedDataAccess
 group Test
 TestStack.BDDfy
 xunit
+NSubstitute
+FluentAssertions

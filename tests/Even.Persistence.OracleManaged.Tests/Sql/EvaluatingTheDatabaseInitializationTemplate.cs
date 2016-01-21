@@ -3,14 +3,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Even.Persistence.OracleManaged.Configuration;
 using Even.Persistence.OracleManaged.Internals.Templating;
 using TestStack.BDDfy;
 using Xunit;
 
 namespace Even.Persistence.OracleManaged.Sql
 {
-    public class SqlScriptProviderSpecs
+    public class EvaluatingTheDatabaseInitializationTemplate
     {
+        private EventStoreDatabaseSchemaSettings _schemaSettings;
         private ITemplateEngine _templateEngine;
         private SqlScriptProvider _scriptProvider;
         private string _templateResult;
@@ -25,11 +27,17 @@ namespace Even.Persistence.OracleManaged.Sql
         {
             _templateEngine = TemplateEngine.Default;
             _scriptProvider = new SqlScriptProvider(_templateEngine);
+            _schemaSettings = new EventStoreDatabaseSchemaSettings(
+                "UnitTesting",
+                false,
+                "Events_Test",
+                "ProjectionIndex_Test",
+                "ProjectionCheckpoint_Test");
         }
 
         public async void WhenWeCallGetInitializationScriptAsync()
         {
-            _templateResult = await _scriptProvider.GetInitializationScriptAsync("Events_Test", "ProjectionIndex_Test", "ProjectionCheckpoint_Test", "UnitTesting");
+            _templateResult = await _scriptProvider.GetInitializationScriptAsync(_schemaSettings);
         }
 
         public void ThenItShouldReplaceTheEvenTable()
